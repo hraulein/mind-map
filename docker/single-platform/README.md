@@ -30,24 +30,24 @@ docker build -t single-mind-map:${version} -f ./docker/single-platform/Dockerfil
 
 ```Bash
 # 基础运行（后台模式）
-docker run -d -p 4999:8080 --name snigle-mind-map single-mind-map:v0.1.0
+docker run -d -p 8080:8080 --name snigle-mind-map single-mind-map:v0.1.0
 
 # 调试运行（前台模式，查看日志）
-docker run -p 4999:8080 --rm single-mind-map:v0.1.0
+docker run -p 8080:8080 --rm single-mind-map:v0.1.0
 ```
 
 端口映射：
 
-* `4999:8080`：将容器内 `8080` 端口映射到主机 `4999` 端口
+* `8080:8080`：将容器内 `8080` 端口映射到主机 `8080` 端口
 
 4. 验证服务
 
 访问应用：
 
-    http://localhost:4999
+    http://localhost:8080
 
 或通过命令行测试：
 
 ```Bash
-curl http://localhost:4999
+curl http://localhost:8080
 ```
