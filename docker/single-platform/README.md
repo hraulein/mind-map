@@ -1,6 +1,6 @@
-单平台 Docker 镜像构建指南：Mind-Map 应用
+单平台 Docker 镜像构建指南：Mind-Map
 
-1. 获取代码
+### 获取代码
 
 ```Bash
 # 克隆仓库
@@ -13,7 +13,7 @@ cd mind-map
 git checkout docker
 ```
 
-2. 构建 Docker 镜像
+### 构建 Docker 镜像
 
 ```Bash
 # 执行构建
@@ -26,7 +26,7 @@ docker build -t single-mind-map:${version} -f ./docker/single-platform/Dockerfil
 * `-t single-mind-map:${version}`：指定镜像名称和标签
 * `.`：使用当前目录作为构建上下文
 
-3. 运行容器
+### 运行容器
 
 ```Bash
 # 基础运行（后台模式）
@@ -40,7 +40,7 @@ docker run -p 8080:8080 --rm single-mind-map:v0.1.0
 
 * `8080:8080`：将容器内 `8080` 端口映射到主机 `8080` 端口
 
-4. 验证服务
+### 验证服务
 
 访问应用：
 
