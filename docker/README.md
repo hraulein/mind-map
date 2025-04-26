@@ -1,4 +1,4 @@
-# Mind-Map Docker 镜像构建指南
+# 【Simple mind map】Docker 镜像构建指南
 
 ## 获取代码
 
@@ -60,7 +60,7 @@ docker buildx create --name multiarch --use
 # web-based login
 docker login
 
-# 或是使用用户名及密码登录
+# 或使用密码登录
 docker_user="hraulein"                  # docker 用户名
 docker login -u ${docker_user}
 ```
