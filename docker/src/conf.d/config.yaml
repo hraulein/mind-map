@@ -1,0 +1,14 @@
+app:
+  name: "MindMap Web Server"
+  author: "Hraulein <solitude@hraulein.com>"
+  version: "v0.1.0"
+  license: "MIT"
+  github: "https://github.com/Hraulein/mind-map"
+  power: "wanglin2/mind-map"
+  build: "gin-gonic/gin"
+  year: 2025
+
+server:
+  port: 8080
+  mode: "release"  # debug/release
+  timeout: 30s     # 支持 duration 格式
