@@ -59,12 +59,6 @@ jobs:
     needs: check-upstream
     if: needs.check-upstream.outputs.has_updates == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        platform: 
-          - "linux/amd64"
-          - "linux/arm64"
-          - "linux/arm/v7"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -86,28 +80,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract platform args
-        id: platform
-        run: |
-          ARCH=$(echo "${{ matrix.platform }}" | cut -d'/' -f2)
-          VARIANT=""
-          if [ "$ARCH" = "arm" ]; then
-            VARIANT="v7"
-          fi
-          echo "targetArch=$ARCH" >> $GITHUB_OUTPUT
-          echo "targetVariant=$VARIANT" >> $GITHUB_OUTPUT
-
-      - name: Build and Push
+      - name: Build and Push (Multi-Arch)
         uses: docker/build-push-action@v5
         with:
           context: .
           file: docker/multi-platform/Dockerfile
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
             ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug
-          build-args: |
-            TARGETARCH=${{ steps.platform.outputs.targetArch }}
-            TARGETVARIANT=${{ steps.platform.outputs.targetVariant }}
+            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest-debug
           cache-from: type=gha
           cache-to: type=gha,mode=max
