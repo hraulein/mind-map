@@ -88,7 +88,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest-debug
+            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}
+            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
