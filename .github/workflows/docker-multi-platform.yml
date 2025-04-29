@@ -1,4 +1,4 @@
-name: Multi-Platform Docker Build (Auto Sync)
+name: Multi-Platform Docker Build
 
 on:
   push:
