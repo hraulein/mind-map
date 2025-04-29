@@ -1,4 +1,4 @@
-name: Simple mind map Multi-Platform Docker Build (Auto Sync)
+name: Multi-Platform Docker Build (Auto Sync)
 
 on:
   push:
@@ -89,8 +89,8 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest
+            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug
+            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest-debug
           build-args: |
             TARGETARCH=${{ matrix.targetArch }}
             TARGETVARIANT=${{ matrix.targetVariant }}
