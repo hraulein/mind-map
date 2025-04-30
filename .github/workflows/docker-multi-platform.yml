@@ -3,11 +3,13 @@ name: Multi-Platform Docker Build
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - "docker/multi-platform/**"
+    paths: 
+      - "docker/**"
+      - "dist/**"
+      - "index.html"
   workflow_dispatch:
-#  schedule:
-#    - cron: "* 8 * * *"
+  schedule:
+    - cron: "* 8 * * *"
 
 env:
   DOCKER_USER: "hraulein"
@@ -90,7 +92,9 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest
+            # ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}
+            # ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest
+            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug
+            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest-debug
           cache-from: type=gha
           cache-to: type=gha,mode=max
