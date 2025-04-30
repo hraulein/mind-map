@@ -12,10 +12,10 @@ generate_tags() {
   local git_sha=$4
 
   if [[ -n "${release_tag}" && "${release_tag}" != "none" ]]; then
-    echo "${docker_user}/${container_name}:${release_tag},${docker_user}/${container_name}:latest,${docker_user}/${container_name}:sha-${git_sha:0:6}"
+    echo "${docker_user}/${container_name}:sha-${git_sha:0:6},${docker_user}/${container_name}:${release_tag},${docker_user}/${container_name}:latest"
   else
     local date_tag=$(date +'%Y.%m.%d')
-    echo "${docker_user}/${container_name}:${date_tag},${docker_user}/${container_name}:latest,${docker_user}/${container_name}:sha-${git_sha:0:6}"
+    echo "${docker_user}/${container_name}:sha-${git_sha:0:6},${docker_user}/${container_name}:${date_tag},${docker_user}/${container_name}:latest"
   fi
 }
 
