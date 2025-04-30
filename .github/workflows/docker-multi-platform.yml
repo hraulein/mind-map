@@ -44,13 +44,12 @@ jobs:
           echo "upstream_commit=$UPSTREAM_COMMIT" >> $GITHUB_OUTPUT
           echo "fork_commit=$FORK_COMMIT" >> $GITHUB_OUTPUT
 
-          # 检查 origin/main 是否包含 upstream/main（即是否已同步）
           if git merge-base --is-ancestor upstream/main origin/main; then
-            echo "has_updates=false" >> $GITHUB_OUTPUT  # 已同步，无更新
-            echo "已同步, 无需更新"
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+            echo "This branch is not behind the upstream"
           else
-            echo "has_updates=true" >> $GITHUB_OUTPUT   # 上游有更新
-            echo "上游有更新"
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+            echo "This branch is behind the upstream"
           fi
 
       - name: Sync updates
