@@ -15,7 +15,7 @@ env:
   DOCKER_USER: "hraulein"
   CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
-  GOTIFY_SERVER: "https://gotify.yourdomain.com"
+  GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }}
   GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }}
 
 jobs:
