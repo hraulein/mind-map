@@ -1,4 +1,4 @@
-name: Multi-Platform Docker Build
+name: Multi-Platform Docker Build (DEBUG)
 
 on:
   push:
