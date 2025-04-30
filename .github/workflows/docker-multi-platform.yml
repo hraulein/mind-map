@@ -14,6 +14,8 @@ env:
   CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
   DOCKER_CLI_EXPERIMENTAL: "enabled"
+  GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }}
+  GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}
