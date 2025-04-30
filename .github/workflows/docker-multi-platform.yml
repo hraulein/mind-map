@@ -12,7 +12,7 @@ on:
     - cron: "* 8 * * *"
 
 env:
-  DOCKER_USER: "hraulein"
+  DOCKER_USER: secrets.DOCKERHUB_USERNAME
   CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
   DOCKER_CLI_EXPERIMENTAL: "enabled"
