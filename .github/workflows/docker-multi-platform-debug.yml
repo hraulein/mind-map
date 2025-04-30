@@ -32,9 +32,10 @@ jobs:
           echo "changed_files=${CHANGED_FILES}" >> $GITHUB_OUTPUT
           [[ "$CHANGED_FILES" =~ ^(dist/|index\.html|docker/).* ]] && echo "files_changed=true" >> $GITHUB_OUTPUT
 
+      # 修复：使用完整action路径和指定版本
       - name: Check releases
         id: check_release
-        uses: dawidd6/action-get-latest-release@v1
+        uses: dawidd6/action-get-latest-release@v2.1.1
         with:
           repository: ${{ env.UPSTREAM_REPO }}
           skipPrereleases: true
