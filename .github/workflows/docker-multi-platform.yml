@@ -3,21 +3,17 @@ name: Multi-Platform Docker Build
 on:
   push:
     branches: [ "main" ]
-    paths: 
-      - "docker/**"
-      - "dist/**"
-      - "index.html"
+    paths:
+      - "docker/multi-platform/**"
   workflow_dispatch:
   schedule:
-    - cron: "* 8 * * *"
+    - cron: "0 */8 * * *"
 
 env:
-  DOCKER_USER: secrets.DOCKERHUB_USERNAME
+  DOCKER_USER: "hraulein"
   CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
   DOCKER_CLI_EXPERIMENTAL: "enabled"
-  GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }}
-  GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}
@@ -38,7 +34,6 @@ jobs:
         run: |
           git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
           git fetch upstream
-
       - name: Compare commits
         id: compare
         run: |
@@ -52,13 +47,11 @@ jobs:
           else
             echo "has_updates=false" >> $GITHUB_OUTPUT
           fi
-
       - name: Sync updates
         if: steps.compare.outputs.has_updates == 'true'
         run: |
           git merge --ff-only upstream/main
           git push origin main
-
   build-and-push:
     needs: check-upstream
     if: needs.check-upstream.outputs.has_updates == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
