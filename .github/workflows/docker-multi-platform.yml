@@ -120,5 +120,5 @@ jobs:
           ./.github/scripts/build_utils.sh send_notification \
             "${{ env.GOTIFY_SERVER }}" "${{ env.GOTIFY_TOKEN }}" "${{ env.CONTAINER_NAME }}" \
             "$STATUS" "${{ github.event_name }}" \
-            "${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug" \
+            "${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAGS }}" \
             "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
