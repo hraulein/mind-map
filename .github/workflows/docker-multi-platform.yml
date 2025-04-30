@@ -15,10 +15,8 @@ env:
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   DOCKER_CONTAINER: "mind-map"
-
   GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }} 
   GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }} 
-
   UPSTREAM_REPO: "wanglin2/mind-map"
   DOCKER_CLI_EXPERIMENTAL: "enabled"
 
