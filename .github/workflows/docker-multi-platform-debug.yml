@@ -1,15 +1,13 @@
-name: Multi-Platform Docker Build (DEBUG)
+name: Multi-Platform Docker Build (Debug)
 
 on:
   push:
     branches: [ "main" ]
     paths:
       - 'dist/**'
-      - 'docker/**'
       - 'index.html'
+      - 'docker/**'
   workflow_dispatch:
-#  schedule:
-#    - cron: "* 8 * * *"
 
 env:
   DOCKER_USER: "hraulein"
@@ -64,7 +62,7 @@ jobs:
       - name: Setup build utils
         run: |
           chmod +x .github/scripts/build_utils.sh
-          echo "GIT_SHA=${GITHUB_SHA:0:6}" >> $GITHUB_ENV
+          echo "GIT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
 
       - name: Generate Docker tags
         id: tags
@@ -74,6 +72,7 @@ jobs:
             "${{ env.CONTAINER_NAME }}" \
             "${{ needs.check-updates.outputs.release_tag }}" \
             "${{ env.GIT_SHA }}")" >> $GITHUB_ENV
+          echo "PRIMARY_TAG=${TAGS%%,*}" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -95,9 +94,8 @@ jobs:
           TRIGGER_REASON: ${{ 
             github.event_name == 'workflow_dispatch' && '手动触发' ||
             contains(needs.check-updates.outputs.changed_files, 'dist/') && '前端变更' ||
-            contains(needs.check-updates.outputs.changed_files, 'docker/') && 'Docker 配置变更' ||
-            'Release 更新'
-          }}
+            contains(needs.check-updates.outputs.changed_files, 'docker/') && 'Docker配置变更' ||
+            'Release更新' }}
         run: |
           .github/scripts/build_utils.sh send_notification \
             "${{ secrets.GOTIFY_SERVER }}" \
@@ -105,5 +103,5 @@ jobs:
             "${{ env.CONTAINER_NAME }}" \
             "${{ job.status }}" \
             "${{ env.TRIGGER_REASON }}" \
-            "${{ env.TAGS.split(',')[0] }}" \
+            "${{ env.PRIMARY_TAG }}" \
             "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
