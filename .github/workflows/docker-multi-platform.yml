@@ -16,6 +16,8 @@ env:
   CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
   DOCKER_CLI_EXPERIMENTAL: "enabled"
+  GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }} 
+  GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }} 
 
 concurrency:
   group: ${{ github.workflow }}
@@ -94,3 +96,15 @@ jobs:
             ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest-debug
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      
+      - name: Send build notification
+        run: |
+          STATUS=${{ job.status }}
+          ./.github/scripts/build_utils.sh send_notification \
+            "${{ env.GOTIFY_SERVER }}" \
+            "${{ env.GOTIFY_TOKEN }}" \
+            "${{ env.CONTAINER_NAME }}" \
+            "$STATUS" \
+            "${{ github.event_name }}" \
+            "${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug" \
+            "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
