@@ -1,22 +1,20 @@
-name: Precision Build with Release Tags
+name: Multi-Platform Docker Build
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'dist/**'      # 前端目录变更
-      - 'index.html'   # 根目录HTML变更
-      - 'docker/**'    # Docker配置变更
-  workflow_dispatch:   # 手动触发
+      - 'dist/**'
+      - 'docker/**'
+      - 'index.html'
+  workflow_dispatch:
 #  schedule:
-#    - cron: "0 0 * * *"  # 每8小时检查上游更新（UTC）
+#    - cron: "* 8 * * *"
 
 env:
   DOCKER_USER: "hraulein"
   CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
-  GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }}
-  GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }}
 
 jobs:
   check-updates:
@@ -29,7 +27,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 检查文件变更（精准匹配）
       - name: Check modified files
         id: check_files
         run: |
@@ -37,16 +34,6 @@ jobs:
           echo "changed_files=${CHANGED_FILES}" >> $GITHUB_OUTPUT
           [[ "$CHANGED_FILES" =~ ^(dist/|index\.html|docker/).* ]] && echo "files_changed=true" >> $GITHUB_OUTPUT
 
-      # 检查上游代码更新
-      - name: Check upstream code
-        if: github.event_name == 'schedule'
-        id: check_code
-        run: |
-          git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
-          git fetch upstream --tags
-          [ "$(git rev-parse origin/main)" != "$(git rev-parse upstream/main)" ] && echo "code_updated=true" >> $GITHUB_OUTPUT
-
-      # 获取上游最新release
       - name: Check releases
         id: check_release
         uses: dawidd6/action-get-latest-release@v1
@@ -56,26 +43,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 综合判断
       - name: Decide build
         id: decide
         run: |
-          # 手动触发或文件变更时直接构建
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] || \
              [[ "${{ steps.check_files.outputs.files_changed }}" == "true" ]]; then
             echo "should_build=true" >> $GITHUB_OUTPUT
             exit 0
           fi
-
-          # 定时任务检查
-          if [[ "${{ github.event_name }}" == "schedule" ]] && \
-             ([[ "${{ steps.check_code.outputs.code_updated }}" == "true" ]] || \
-              [[ "${{ steps.check_release.outputs.release }}" != "" ]]); then
-            echo "should_build=true" >> $GITHUB_OUTPUT
-            echo "release_tag=${{ steps.check_release.outputs.tag }}" >> $GITHUB_OUTPUT
-          else
-            echo "should_build=false" >> $GITHUB_OUTPUT
-          fi
+          echo "should_build=${{ steps.check_release.outputs.release != '' }}" >> $GITHUB_OUTPUT
+          echo "release_tag=${{ steps.check_release.outputs.tag || 'none' }}" >> $GITHUB_OUTPUT
 
   build:
     needs: check-updates
@@ -84,21 +61,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 智能标签设置
-      - name: Set dynamic tags
+      - name: Setup build utils
+        run: |
+          chmod +x .github/scripts/build_utils.sh
+          echo "GIT_SHA=${GITHUB_SHA:0:6}" >> $GITHUB_ENV
+
+      - name: Generate Docker tags
         id: tags
         run: |
-          if [[ "${{ needs.check-updates.outputs.release_tag }}" != "none" ]]; then
-            echo "RELEASE_TAG=${{ needs.check-updates.outputs.release_tag }}" >> $GITHUB_ENV
-            echo "TAGS=${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ needs.check-updates.outputs.release_tag }}-debug" >> $GITHUB_ENV
-          else
-            echo "DATE_TAG=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
-            echo "TAGS=${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.DATE_TAG }}-debug" >> $GITHUB_ENV
-          fi
-          echo "TAGS+=,${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest-debug" >> $GITHUB_ENV
-          echo "TAGS+=,${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:sha-${GITHUB_SHA:0:7}-debug" >> $GITHUB_ENV
+          echo "TAGS=$(.github/scripts/build_utils.sh generate_tags \
+            "${{ env.DOCKER_USER }}" \
+            "${{ env.CONTAINER_NAME }}" \
+            "${{ needs.check-updates.outputs.release_tag }}" \
+            "${{ env.GIT_SHA }}")" >> $GITHUB_ENV
 
-      # 多平台构建
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -109,33 +85,25 @@ jobs:
           tags: ${{ env.TAGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          secrets: |
+            "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}"
+            "DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}"
 
-      # 增强版Gotify通知
-      - name: Send smart notification
+      - name: Send notification
         if: always()
         env:
-          BUILD_STATUS: ${{ job.status }}
-          CUSTOM_MESSAGE: |
-            ${{ format('{0}项目构建{1}', env.CONTAINER_NAME, (job.status == 'success' && '成功 ✅' || '失败 ❌')) }}
-            ${{ format('触发原因: {0}', (github.event_name == 'workflow_dispatch' && '手动触发' || (steps.check_files.outputs.files_changed == 'true' && '文件变更' || '上游更新'))) }}
-            ${{ format('镜像标签: {0}', env.TAGS.split(',')[0].split(':')[1]) }}
-            ${{ format('详情: {0}/actions/runs/{1}', github.server_url, github.run_id) }}
+          TRIGGER_REASON: ${{ 
+            github.event_name == 'workflow_dispatch' && '手动触发' ||
+            contains(needs.check-updates.outputs.changed_files, 'dist/') && '前端变更' ||
+            contains(needs.check-updates.outputs.changed_files, 'docker/') && 'Docker 配置变更' ||
+            'Release 更新'
+          }}
         run: |
-          curl -X POST \
-            "${{ env.GOTIFY_SERVER }}/message?token=${{ env.GOTIFY_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d @- <<EOF
-          {
-            "title": "${{ env.CONTAINER_NAME }} 构建通知",
-            "message": "${{ env.CUSTOM_MESSAGE }}",
-            "priority": ${{ env.BUILD_STATUS == 'success' && 5 || 8 }},
-            "extras": {
-              "client::display": {
-                "contentType": "text/markdown"
-              },
-              "client::notification": {
-                "click": { "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }
-              }
-            }
-          }
-          EOF
+          .github/scripts/build_utils.sh send_notification \
+            "${{ secrets.GOTIFY_SERVER }}" \
+            "${{ secrets.GOTIFY_TOKEN }}" \
+            "${{ env.CONTAINER_NAME }}" \
+            "${{ job.status }}" \
+            "${{ env.TRIGGER_REASON }}" \
+            "${{ env.TAGS.split(',')[0] }}" \
+            "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
