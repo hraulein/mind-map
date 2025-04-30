@@ -4,10 +4,12 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "docker/multi-platform/**"
+      - "docker/**"
+      - "dist/**"
+      - "index.html"
   workflow_dispatch:
   schedule:
-    - cron: "0 */8 * * *"
+    - cron: "* 2 * * *"
 
 env:
   DOCKER_USER: "hraulein"
