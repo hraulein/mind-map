@@ -43,12 +43,14 @@ jobs:
           FORK_COMMIT=$(git rev-parse origin/main)
           echo "upstream_commit=$UPSTREAM_COMMIT" >> $GITHUB_OUTPUT
           echo "fork_commit=$FORK_COMMIT" >> $GITHUB_OUTPUT
-          if [ "$UPSTREAM_COMMIT" != "$FORK_COMMIT" ]; then
-            echo "has_updates=true" >> $GITHUB_OUTPUT
-            echo "Detected update: $UPSTREAM_COMMIT → $FORK_COMMIT"
+
+          # 检查 origin/main 是否包含 upstream/main（即是否已同步）
+          if git merge-base --is-ancestor upstream/main origin/main; then
+            echo "has_updates=false" >> $GITHUB_OUTPUT  # 已同步，无更新
           else
-            echo "has_updates=false" >> $GITHUB_OUTPUT
+            echo "has_updates=true" >> $GITHUB_OUTPUT   # 上游有更新
           fi
+
       - name: Sync updates
         if: steps.compare.outputs.has_updates == 'true'
         run: |
@@ -56,7 +58,7 @@ jobs:
           git push origin main
   build-and-push:
     needs: check-upstream
-    if: needs.check-upstream.outputs.has_updates == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: needs.check-upstream.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
