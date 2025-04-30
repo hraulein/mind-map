@@ -77,9 +77,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Set build date
-      #   run: echo "TAG=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -97,14 +94,11 @@ jobs:
       - name: Generate Docker tags
         id: generate_tags
         run: |
-          # 调用脚本生成标签（逗号分隔的列表）
           TAGS=$(./.github/scripts/build_utils.sh generate_tags \
             "${{ env.DOCKER_USER }}" \
             "${{ env.CONTAINER_NAME }}" \
             "${{ needs.check-upstream.outputs.latest_upstream_tag || 'none' }}" \
             "${{ github.sha }}")
-          
-          # 输出到环境变量
           echo "TAGS=${TAGS}" >> $GITHUB_ENV
           echo "Generate tags: ${TAGS}"
 
@@ -116,9 +110,7 @@ jobs:
           file: docker/multi-platform/Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: |
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug
-            ${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:latest-debug
+          tags: ${{ env.TAGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       
