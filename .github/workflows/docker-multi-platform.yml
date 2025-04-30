@@ -12,12 +12,15 @@ on:
     - cron: "* 2 * * *"
 
 env:
-  DOCKER_USER: "hraulein"
+  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }} 
+  GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }} 
+
   CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
   DOCKER_CLI_EXPERIMENTAL: "enabled"
-  GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }} 
-  GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }} 
 
 concurrency:
   group: ${{ github.workflow }}
@@ -28,7 +31,7 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       has_updates: ${{ steps.compare.outputs.has_updates }}
-      latest_upstream_tag: ${{ steps.get-upstream-tag.outputs.latest_tag }}  # 新增输出
+      latest_upstream_tag: ${{ steps.get-upstream-tag.outputs.latest_tag }} 
     steps:
       - name: Checkout Fork Code
         uses: actions/checkout@v4
@@ -95,7 +98,7 @@ jobs:
         id: generate_tags
         run: |
           TAGS=$(./.github/scripts/build_utils.sh generate_tags \
-            "${{ env.DOCKER_USER }}" \
+            "${{ env.DOCKERHUB_USER }}" \
             "${{ env.CONTAINER_NAME }}" \
             "${{ needs.check-upstream.outputs.latest_upstream_tag || 'none' }}" \
             "${{ github.sha }}")
@@ -120,5 +123,5 @@ jobs:
           ./.github/scripts/build_utils.sh send_notification \
             "${{ env.GOTIFY_SERVER }}" "${{ env.GOTIFY_TOKEN }}" "${{ env.CONTAINER_NAME }}" \
             "$STATUS" "${{ github.event_name }}" \
-            "${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAGS }}" \
+            "${{ env.TAGS }}" \
             "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

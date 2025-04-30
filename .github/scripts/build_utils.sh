@@ -12,14 +12,14 @@ generate_tags() {
   local git_sha=$4
 
   if [[ -n "${release_tag}" && "${release_tag}" != "none" ]]; then
-    echo "${docker_user}/${container_name}:${release_tag},${docker_user}/${container_name}:latest-debug,${docker_user}/${container_name}:sha-${git_sha:0:6}"
+    echo "${docker_user}/${container_name}:${release_tag},${docker_user}/${container_name}:latest,${docker_user}/${container_name}:sha-${git_sha:0:6}"
   else
     local date_tag=$(date +'%Y.%m.%d')
-    echo "${docker_user}/${container_name}:${date_tag},${docker_user}/${container_name}:latest-debug,${docker_user}/${container_name}:sha-${git_sha:0:6}"
+    echo "${docker_user}/${container_name}:${date_tag},${docker_user}/${container_name}:latest,${docker_user}/${container_name}:sha-${git_sha:0:6}"
   fi
 }
 
-# 安全通知函数（所有敏感数据通过参数传入）
+
 send_notification() {
   : "${1?Gotify server URL required}"
   : "${2?Gotify token required}"
@@ -41,7 +41,7 @@ send_notification() {
   local priority=5
   [ "${build_status}" != "success" ] && priority=8
 
-  # 使用heredoc避免敏感信息泄露到进程列表
+
   local message=$(cat <<EOF
     项目: ${container_name}  \n
     状态: ${build_status}  \n
@@ -56,7 +56,7 @@ EOF
 EOF
 }
 
-# 主入口（根据参数调用不同函数）
+
 main() {
   case "${1:-}" in
     generate_tags)
