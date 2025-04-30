@@ -28,6 +28,7 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       has_updates: ${{ steps.compare.outputs.has_updates }}
+      latest_upstream_tag: ${{ steps.get-upstream-tag.outputs.latest_tag }}  # 新增输出
     steps:
       - name: Checkout Fork Code
         uses: actions/checkout@v4
@@ -38,6 +39,7 @@ jobs:
         run: |
           git remote add upstream https://github.com/${{ env.UPSTREAM_REPO }}.git
           git fetch upstream
+          git fetch upstream --tags
       - name: Compare commits
         id: compare
         run: |
@@ -54,12 +56,20 @@ jobs:
             echo "This branch is behind the upstream"
           fi
 
+      - name: Get latest upstream tag
+        id: get-upstream-tag
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 upstream/main 2>/dev/null || echo "none")
+          echo "latest_tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          echo "Latest tag: ${LATEST_TAG}"
+
       - name: Sync updates
         if: steps.compare.outputs.has_updates == 'true'
         run: |
           git merge --ff-only upstream/main
           git push origin main
-  build-and-push:
+
+  build-push:
     needs: check-upstream
     if: needs.check-upstream.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-22.04
@@ -67,8 +77,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set build date
-        run: echo "TAG=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+      # - name: Set build date
+      #   run: echo "TAG=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -83,6 +93,21 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Generate Docker tags
+        id: generate_tags
+        run: |
+          # 调用脚本生成标签（逗号分隔的列表）
+          TAGS=$(./.github/scripts/build_utils.sh generate_tags \
+            "${{ env.DOCKER_USER }}" \
+            "${{ env.CONTAINER_NAME }}" \
+            "${{ needs.check-upstream.outputs.latest_upstream_tag || 'none' }}" \
+            "${{ github.sha }}")
+          
+          # 输出到环境变量
+          echo "TAGS=${TAGS}" >> $GITHUB_ENV
+          echo "Generate tags: ${TAGS}"
+
 
       - name: Build and Push (Multi-Arch)
         uses: docker/build-push-action@v5
@@ -101,10 +126,7 @@ jobs:
         run: |
           STATUS=${{ job.status }}
           ./.github/scripts/build_utils.sh send_notification \
-            "${{ env.GOTIFY_SERVER }}" \
-            "${{ env.GOTIFY_TOKEN }}" \
-            "${{ env.CONTAINER_NAME }}" \
-            "$STATUS" \
-            "${{ github.event_name }}" \
+            "${{ env.GOTIFY_SERVER }}" "${{ env.GOTIFY_TOKEN }}" "${{ env.CONTAINER_NAME }}" \
+            "$STATUS" "${{ github.event_name }}" \
             "${{ env.DOCKER_USER }}/${{ env.CONTAINER_NAME }}:${{ env.TAG }}-debug" \
             "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
