@@ -12,13 +12,13 @@ on:
     - cron: "* 2 * * *"
 
 env:
-  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  DOCKER_CONTAINER: "mind-map"
 
   GOTIFY_SERVER: ${{ secrets.GOTIFY_SERVER }} 
   GOTIFY_TOKEN: ${{ secrets.GOTIFY_TOKEN }} 
 
-  CONTAINER_NAME: "mind-map"
   UPSTREAM_REPO: "wanglin2/mind-map"
   DOCKER_CLI_EXPERIMENTAL: "enabled"
 
@@ -91,15 +91,15 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_TOKEN }}
 
       - name: Generate Docker tags
         id: generate_tags
         run: |
           TAGS=$(./.github/scripts/build_utils.sh generate_tags \
-            "${{ env.DOCKERHUB_USER }}" \
-            "${{ env.CONTAINER_NAME }}" \
+            "${{ env.DOCKER_USERNAME }}" \
+            "${{ env.DOCKER_CONTAINER }}" \
             "${{ needs.check-upstream.outputs.latest_upstream_tag || 'none' }}" \
             "${{ github.sha }}")
           echo "TAGS=${TAGS}" >> $GITHUB_ENV
@@ -121,7 +121,7 @@ jobs:
         run: |
           STATUS=${{ job.status }}
           ./.github/scripts/build_utils.sh send_notification \
-            "${{ env.GOTIFY_SERVER }}" "${{ env.GOTIFY_TOKEN }}" "${{ env.CONTAINER_NAME }}" \
+            "${{ env.GOTIFY_SERVER }}" "${{ env.GOTIFY_TOKEN }}" "${{ env.DOCKER_CONTAINER }}" \
             "$STATUS" "${{ github.event_name }}" \
             "${{ env.TAGS }}" \
             "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
