@@ -14,16 +14,14 @@
 
 - 本人非原项目作者, 仅构建 docker 镜像, 如遇项目 BUG 等请到 [Github/wanglin2](https://github.com/wanglin2/mind-map) 提相关 [issue](https://github.com/wanglin2/mind-map/issues) 
 
-- 如在部署过程中遇到镜像启动失败等相关问题, 请到 [Github/Hraulein](https://github.com/hraulein/mind-map) 提 [issue](https://github.com/hraulein/mind-map/issues) , 也可联系邮箱: [solitude@hraulein.com](mailto:solitude@hraulein.com)  
+- 如在部署过程中遇到镜像启动失败等相关问题, 请提 [issue](https://github.com/hraulein/mind-map/issues) , 也可联系邮箱: [solitude@hraulein.com](mailto:solitude@hraulein.com)  
 
 - 目前容器的运行环境为 `scratch`(不包含 `sh/bash`), 不影响 mind-map 的运行  
-如需挂载你自定义的 mind-map 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
+如需挂载你自定义的 ` 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
 
 - 目前 `httpdGIN` 采用配置文件形式读取配置, 如需自定义配置, 请先将容器内部的 `/conf.d/` 目录拷贝出来后再挂载
 
 ## 使用方式
-
-**Usage**
 
 1\. `docker-compose.yaml`
 
@@ -50,8 +48,7 @@ docker run -d --name mind-map -p 8080:8080 -v ./your_config_dir:/conf.d hraulein
 
 ## nginx 配置参考
 
-- HTTP 重定向 HTTPS  
-HTTP redirection HTTPS
+- `HTTP` 重定向 `HTTPS` 
 
 ```
 # /etc/nginx/conf.d/00-redirect.conf
@@ -64,7 +61,6 @@ server {
 ```
 
 - `SSL` 证书相关配置  
-SSL certificate related configuration
 
 ``` 
 # /etc/nginx/conf.d/include/ssl_parameter
@@ -85,8 +81,7 @@ resolver_timeout 5s;
 add_header Strict-Transport-Security "max-age=31536000" always;
 ```
 
-- nginx 反向代理配置  
-Nginx reverse proxy configuration
+- `nginx` 反向代理配置
 
 ``` 
 # /etc/nginx/conf.d/mind-map.conf
