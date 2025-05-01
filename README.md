@@ -12,12 +12,21 @@
 
 中文 | [English](./README_en.md)
 
-- 本人非原项目作者, 仅构建 docker 镜像, 如遇项目 BUG 等请到 [Github/wanglin2](https://github.com/wanglin2/mind-map) 提相关 [issue](https://github.com/wanglin2/mind-map/issues) 
+---
+
+基于 `Gin` 框架构建跨平台 `HTTP` 服务，通过 `Docker` 的多平台构建能力，实现 `mind-map` 在不同硬件架构上运行使用。
+
+* 跨平台兼容：支持 `amd64` `arm64 | arm/v8` `arm/v7`
+* 开箱即用：预配置 `mind-map` 静态文件，无需额外运行时依赖
+
+在线地址: `https://mind-map.hraulein.com`  
+
+镜像地址: `https://hub.docker.com/r/hraulein/mind-map`
 
 - 如在部署过程中遇到镜像启动失败等相关问题, 请提 [issue](https://github.com/hraulein/mind-map/issues) , 也可联系邮箱: [solitude@hraulein.com](mailto:solitude@hraulein.com)  
 
 - 目前容器的运行环境为 `scratch`(不包含 `sh/bash`), 不影响 mind-map 的运行  
-如需挂载你自定义的 ` 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
+如需挂载你自定义的 `mind-map` 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
 
 - 目前 `httpdGIN` 采用配置文件形式读取配置, 如需自定义配置, 请先将容器内部的 `/conf.d/` 目录拷贝出来后再挂载
 
@@ -35,7 +44,7 @@ services:
       - "8080:8080"  
     volumes:                   
       - ./your_config_dir:/conf.d
-  #   - ./your_dist_dir:/app    # 如果你想自定义 mind-map 的静态文件
+  #   - ./your_dist_dir:/app                               # 如果你想自定义 mind-map 的静态文件
 
 
 ```
@@ -92,11 +101,11 @@ server {
     http2 on;
     include ./conf.d/include/ssl_parameter;  
   
-    server_name mind-map.hraulein.localhost;   # <<< 替换为你的域名
-    set $IPADDR 172.16.19.156;                 # <<< 替换为你服务器的内网 IP 地址
+    server_name mind-map.hraulein.localhost;               # <<< 替换为你的域名
+    set $IPADDR 172.16.19.156;                             # <<< 替换为你服务器的内网 IP 地址
 
     location / {
-        proxy_pass http://$IPADDR:8080;        # <<< 替换为 mind-map 服务实际映射端口
+        proxy_pass http://$IPADDR:8080;                    # <<< 替换为 mind-map 服务实际映射端口
         proxy_set_header Host $host;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection upgrade;
