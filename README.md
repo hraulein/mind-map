@@ -1,4 +1,4 @@
-<h1 align="center">Simple mind map (Docker Containers)</h1>
+# Simple mind map (Docker Containers)
 
 [![Docker Version](https://img.shields.io/docker/v/hraulein/mind-map/latest)](https://github.com/hraulein/mind-map/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/hraulein/mind-map)](https://hub.docker.com/r/hraulein/mind-map/)
