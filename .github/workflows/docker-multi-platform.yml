@@ -9,7 +9,7 @@ on:
       - "index.html"
   workflow_dispatch:
   schedule:
-    - cron: "0 8 * * *"
+    - cron: "20 02 * * *"
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -67,7 +67,13 @@ jobs:
       - name: Sync updates
         if: steps.compare.outputs.has_updates == 'true'
         run: |
-          git merge --ff-only upstream/main
+          echo "README.md merge=ours" > .gitattributes
+          git add .gitattributes
+          git commit -m "Set merge strategy for README.md" || true
+          git merge --ff-only upstream/main || {
+            git merge --strategy=ours --no-ff upstream/main -m "Merge upstream/main (preserving local files)"
+          }
+          git checkout HEAD -- README.md
           git push origin main
 
   build-push:
