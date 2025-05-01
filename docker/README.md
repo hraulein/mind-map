@@ -14,13 +14,11 @@ cd mind-map
 
 ### 单平台构建
 
-
 ```Bash
 # 定义构建参数
 single_container="single-mind-map"         # 镜像名称
 single_container_tag="v0.1.0"              # 镜像标签/版本
 ```
-
 
 ``` bash
 # 开始构建
