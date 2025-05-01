@@ -8,22 +8,20 @@
 [![npm-version](https://img.shields.io/npm/v/simple-mind-map)](https://www.npmjs.com/package/simple-mind-map)
 ![license](https://img.shields.io/npm/l/express.svg)
 
----
+--- 
 
-中文 | [English](./README_en.md)
+[中文](./README.md) | English
 
-- 本人非原项目作者, 仅构建 docker 镜像, 如遇项目 BUG 等请到 [Github/wanglin2](https://github.com/wanglin2/mind-map) 提相关 [issue](https://github.com/wanglin2/mind-map/issues) 
+I am not the original project author. Currently, I am only building an docker image. If you encounter any bugs or [issue](https://github.com/wanglin2/mind-map/issues) in the project, please submit them to [Github/wanglin2](https://github.com/wanglin2/mind-map)
 
-- 如在部署过程中遇到镜像启动失败等相关问题, 请到 [Github/Hraulein](https://github.com/hraulein/mind-map) 提 [issue](https://github.com/hraulein/mind-map/issues) , 也可联系邮箱: [solitude@hraulein.com](mailto:solitude@hraulein.com)  
+If you encounter issues such as image startup failure during deployment, please go to [Github/Hraulein](https://github.com/hraulein/mind-map) to raise an [issue](https://github.com/hraulein/mind-map/issues), or contact email [solitude@hraulein.com](mailto:solitude@hraulein.com)
 
-- 目前容器的运行环境为 `scratch`(不包含 `sh/bash`), 不影响 mind-map 的运行  
-如需挂载你自定义的 mind-map 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
+- The current operating environment of the container is  `scratch` (excluding `sh/bash`), which does not affect the running of mind map
+To mount the static file of your custom mind map, map your file directory to the `/app` inside the container
 
-- 目前 `httpdGIN` 采用配置文件形式读取配置, 如需自定义配置, 请先将容器内部的 `/conf.d/` 目录拷贝出来后再挂载
+- At present, `httpdGIN` reads configurations in the form of configuration files. If you need to customize configurations, please copy the `/conf. d/` directory inside the container before mounting it
 
-## 使用方式
-
-**Usage**
+## Usage
 
 1\. `docker-compose.yaml`
 
@@ -37,7 +35,7 @@ services:
       - "8080:8080"  
     volumes:                   
       - ./your_config_dir:/conf.d
-  #   - ./your_dist_dir:/app    # 如果你想自定义 mind-map 的静态文件
+  #   - ./your_dist_dir:/app    # If you want custom mind-map static dir
 
 
 ```
@@ -48,10 +46,9 @@ services:
 docker run -d --name mind-map -p 8080:8080 -v ./your_config_dir:/conf.d hraulein/mind-map:latest
 ```
 
-## nginx 配置参考
+## Nginx configuration reference
 
-- HTTP 重定向 HTTPS  
-HTTP redirection HTTPS
+- HTTP redirection HTTPS
 
 ```
 # /etc/nginx/conf.d/00-redirect.conf
@@ -63,15 +60,14 @@ server {
 }
 ```
 
-- `SSL` 证书相关配置  
-SSL certificate related configuration
+- SSL certificate related configuration
 
 ``` 
 # /etc/nginx/conf.d/include/ssl_parameter
 
-ssl_certificate '/etc/nginx/*****/*****/fullchain.cer';    # <<< 替换为实际的证书地址
-ssl_certificate_key '/etc/nginx/*****/*****/*****.key';    # <<< 替换为实际的证书地址
-ssl_trusted_certificate '/etc/nginx/*****/*****/ca.cer';   # <<< 替换为实际的证书地址
+ssl_certificate '/etc/nginx/*****/*****/fullchain.cer';    # <<< replace file path
+ssl_certificate_key '/etc/nginx/*****/*****/*****.key';    # <<< replace file path
+ssl_trusted_certificate '/etc/nginx/*****/*****/ca.cer';   # <<< replace file path
 ssl_session_cache shared:SSL:1m;
 ssl_session_timeout 10m;
 ssl_session_tickets off;
@@ -85,8 +81,7 @@ resolver_timeout 5s;
 add_header Strict-Transport-Security "max-age=31536000" always;
 ```
 
-- nginx 反向代理配置  
-Nginx reverse proxy configuration
+- Nginx reverse proxy 
 
 ``` 
 # /etc/nginx/conf.d/mind-map.conf
@@ -97,11 +92,11 @@ server {
     http2 on;
     include ./conf.d/include/ssl_parameter;  
   
-    server_name mind-map.hraulein.localhost;   # <<< 替换为你的域名
-    set $IPADDR 172.16.19.156;                 # <<< 替换为你服务器的内网 IP 地址
+    server_name mind-map.hraulein.localhost;   # <<< replace your domain
+    set $IPADDR 172.16.19.156;                 # <<< replace localhost ipaddr
 
     location / {
-        proxy_pass http://$IPADDR:8080;        # <<< 替换为 mind-map 服务实际映射端口
+        proxy_pass http://$IPADDR:8080;        # <<< replace your service port
         proxy_set_header Host $host;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection upgrade;
