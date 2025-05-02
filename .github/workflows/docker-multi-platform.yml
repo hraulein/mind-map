@@ -87,6 +87,8 @@ jobs:
             static:
               - 'dist/**'
               - 'index.html'
+          list-files: ${{ github.event_name == 'workflow_dispatch' }}
+
               
       - name: File Monitor Result
         id: monitor-result
@@ -103,6 +105,11 @@ jobs:
     if: needs.check-upstream.outputs.has_updates == 'true' || needs.check-upstream.outputs.file_changed == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-22.04
     steps:
+      - name: Debug output
+        run: |
+          echo "has_updates: ${{ needs.check-upstream.outputs.has_updates == 'true' }} \
+                file_changed: ${{ needs.check-upstream.outputs.file_changed }} \
+          "
       - name: Checkout code
         uses: actions/checkout@v4
 
