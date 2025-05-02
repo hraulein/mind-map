@@ -96,14 +96,11 @@ jobs:
           else
             echo "file_changed=false" >> $GITHUB_OUTPUT
           fi
-          echo "Files monitor status: docker[${{ steps.file-monitor.outputs.docker }}], Static[${{ steps.file-monitor.outputs.static }}], output[${{ steps.monitor-result.outputs.file_changed }}]"
+          echo "Files monitor status: docker[${{ steps.file-monitor.outputs.docker }}], Static[${{ steps.file-monitor.outputs.static }}]"
 
   docker-build-push:
     needs: check-upstream
-    if: >
-      needs.check-upstream.outputs.has_updates == 'true' || 
-      needs.check-upstream.outputs.file_changed == 'true' || 
-      github.event_name == 'workflow_dispatch'
+    if: needs.check-upstream.outputs.has_updates == 'true' || needs.check-upstream.outputs.file_changed == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
