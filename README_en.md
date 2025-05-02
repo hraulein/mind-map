@@ -14,18 +14,17 @@
 
 Building cross platform HTTP services based on the Gin framework, utilizing Docker's multi platform building capabilities to enable mind maps to run and be used on different hardware architectures.
 
-Cross platform compatibility: Supports `AMD64` `arm64 | arm/V8` `arm/V7`
-Ready to use out of the box: pre configured mind map static file, no additional runtime dependencies required
+- Cross platform compatibility: Supports `AMD64` `arm64 | arm/V8` `arm/V7`  
+- Ready to use out of the box: pre configured mind map static file, no additional runtime dependencies required
 
 Online address: https://mind-map.hraulein.com
 Mirror address: https://hub.docker.com/r/hraulein/mind-map
 
 If you encounter issues such as image startup failure during deployment, please raise an issue or contact email: solitude@hraulein.com
 
-The current operating environment of the container is `Scratch` (excluding `sh/bash`), which does not affect the running of `Mind Map`
+- The current operating environment of the container is `Scratch` (excluding `sh/bash`), which does not affect the running of `Mind Map`
 To mount the static file of your custom mind map, map your file directory to the `/app` inside the container
-
-At present, `httpdGIN` reads configurations in the form of configuration files. If you need to customize configurations, please copy the `/conf.d/` directory inside the container before mounting it
+- At present, `httpdGIN` reads configurations in the form of configuration files. If you need to customize configurations, please copy the `/conf.d/` directory inside the container before mounting it
 
 ## Usage
 
