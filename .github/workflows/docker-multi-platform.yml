@@ -85,7 +85,8 @@ jobs:
             static:
               - 'dist/**'
               - 'index.html'
-              
+          initial-fetch-depth: 0
+          
       - name: File Monitor Result
         id: monitor-result
         run: |
