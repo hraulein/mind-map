@@ -87,7 +87,7 @@ jobs:
             static:
               - 'dist/**'
               - 'index.html'
-          list-files: ${{ github.event_name == 'workflow_dispatch' }}
+          list-files: ${{ github.event_name == 'workflow_dispatch' && 'all' || 'none' }}
 
               
       - name: File Monitor Result
