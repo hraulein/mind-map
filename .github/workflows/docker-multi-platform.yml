@@ -78,7 +78,7 @@ jobs:
 
   build-push:
     needs: check-upstream
-    if: needs.check-upstream.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.check-upstream.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'  || contains(github.event.commits[*].modified, 'docker/')
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
