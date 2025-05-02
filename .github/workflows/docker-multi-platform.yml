@@ -9,7 +9,7 @@ on:
       - "index.html"
   workflow_dispatch:
   schedule:
-    - cron: "0 16 * * *"
+    - cron: "0 6 * * *"
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
