@@ -87,8 +87,6 @@ jobs:
             static:
               - 'dist/**'
               - 'index.html'
-          list-files: ${{ github.event_name == 'workflow_dispatch' && 'all' || 'none' }}
-
               
       - name: File Monitor Result
         id: monitor-result
@@ -99,6 +97,7 @@ jobs:
             echo "file_changed=false" >> $GITHUB_OUTPUT
           fi
           echo "Files monitor status: docker[${{ steps.file-monitor.outputs.docker }}], Static[${{ steps.file-monitor.outputs.static }}]"
+          
 
   docker-build-push:
     needs: check-upstream
