@@ -19,11 +19,10 @@
 * 跨平台兼容：支持 `amd64` `arm64 | arm/v8` `arm/v7`
 * 开箱即用：预配置 `mind-map` 静态文件，无需额外运行时依赖
 
-在线地址: `https://mind-map.hraulein.com`  
+在线地址: https://mind-map.hraulein.com  
+镜像地址: https://hub.docker.com/r/hraulein/mind-map
 
-镜像地址: `https://hub.docker.com/r/hraulein/mind-map`
-
-- 如在部署过程中遇到镜像启动失败等相关问题, 请提 [issue](https://github.com/hraulein/mind-map/issues) , 也可联系邮箱: [solitude@hraulein.com](mailto:solitude@hraulein.com)  
+如在部署过程中遇到镜像启动失败等相关问题, 请提 [issue](https://github.com/hraulein/mind-map/issues)
 
 - 目前容器的运行环境为 `scratch`(不包含 `sh/bash`), 不影响 mind-map 的运行  
 如需挂载你自定义的 `mind-map` 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
