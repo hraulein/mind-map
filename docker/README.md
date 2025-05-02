@@ -7,7 +7,7 @@
 git clone https://github.com/Hraulein/mind-map.git
 
 # 进入项目目录
-cd mind-map
+cd mind-map 
 ```
 
 ## 构建 Docker 镜像
