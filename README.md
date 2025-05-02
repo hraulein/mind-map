@@ -114,6 +114,10 @@ server {
 }
 ```
 
-## [请我喝杯可乐](https://github.com/Hraulein/mind-map/issues/1#%E6%94%AF%E6%8C%81%E4%B8%80%E4%B8%8B)
+## 支持一下
+
+如果 Docker 镜像对你有帮助 , 不妨请我喝杯阔落解解馋~
+
+![Image](https://github.com/user-attachments/assets/a27ed620-30a3-460d-85b2-6fa869a91780)
 
 
