@@ -96,7 +96,7 @@ jobs:
           else
             echo "file_changed=false" >> $GITHUB_OUTPUT
           fi
-          echo "Files monitor status: docker[${{ steps.file-monitor.outputs.docker }}], Static[${{ steps.file-monitor.outputs.static }}]"
+          echo "Files monitor status: docker[${{ steps.file-monitor.outputs.docker }}], Static[${{ steps.file-monitor.outputs.static }}], output[${{ steps.monitor-result.outputs.file_changed }}]"
 
   docker-build-push:
     needs: check-upstream
