@@ -30,7 +30,7 @@ jobs:
     outputs:
       has_updates: ${{ steps.compare.outputs.has_updates }}
       latest_upstream_tag: ${{ steps.get-upstream-tag.outputs.latest_tag }} 
-      file_changed: ${{ steps.set-monitor.outputs.file_changed }}
+      file_changed: ${{ steps.monitor-result.outputs.file_changed }}
     steps:
       - name: Checkout Fork Code
         uses: actions/checkout@v4
@@ -77,7 +77,7 @@ jobs:
           git checkout HEAD -- README.md
           git push origin main
 
-      - name: File Monitor
+      - name: Set File Monitor
         uses: dorny/paths-filter@v3
         id: file-monitor
         with:
@@ -88,8 +88,8 @@ jobs:
               - 'dist/**'
               - 'index.html'
               
-      - name: Set combined output
-        id: set-monitor
+      - name: File Monitor Result
+        id: monitor-result
         run: |
           if [[ "${{ steps.file-monitor.outputs.docker }}" == "true" || "${{ steps.file-monitor.outputs.static }}" == "true" ]]; then
             echo "file_changed=true" >> $GITHUB_OUTPUT
