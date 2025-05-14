@@ -68,6 +68,8 @@ jobs:
       - name: Sync updates
         if: steps.compare.outputs.has_updates == 'true'
         run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"          
           echo "README.md merge=ours" > .gitattributes
           git add .gitattributes
           git commit -m "Set merge strategy for README.md" || true
