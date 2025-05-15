@@ -110,14 +110,11 @@ add_header Strict-Transport-Security "max-age=31536000" always;
 ``` 
 # /etc/nginx/conf.d/mind-map.conf
 
-server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
-    http2 on;
-    include ./conf.d/include/ssl_parameter;  
-  
-    server_name mind-map.hraulein.localhost;               # <<< 替换为你的域名
-    set $IPADDR 172.16.19.156;                             # <<< 替换为你服务器的内网 IP 地址
+[MIT](./LICENSE)。保留`simple-mind-map`版权声明和注明来源的情况下可随意商用，如有疑问或不想保留可联系作者通过付费的方式去除。
+
+> 示例：可以在你应用中的关于页面、帮助页面、文档页面、开源声明等任何页面添加以下内容：
+>
+> 本产品思维导图基于SimpleMindMap项目开发，版权归源项目所有，[开源协议](https://github.com/wanglin2/mind-map/blob/main/LICENSE)。
 
     location / {
         proxy_pass http://$IPADDR:8080;                    # <<< 替换为 mind-map 服务实际映射端口
@@ -130,7 +127,19 @@ server {
 }
 ```
 
-微信添加`wanglinguanfang`拉你入群。根据过往的经验，大部分问题都可以通过查看issue列表或文档解决，所以提问前请确保你已经阅读完了所有文档，文档里没有的可在群里提问，不必私聊作者，如果你一定要私聊，请先赞助本项目（￥150+）。
+微信添加`wanglinguanfang`拉你入群。根据过往的经验，大部分问题都可以通过查看issue列表或文档解决，所以提问前请确保你已经阅读完了所有文档，文档里没有的可在群里提问，不必私聊作者，如果你一定要私聊，请先赞助本项目（￥200+）。
+
+<table>
+    <tr>
+        <td align="center" style="word-wrap: break-word; width: 75.0; height: 75.0">
+            <a href="http://drawon.cn/">
+                <img src="./web/src/assets/img/gzh.jpeg" width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px"/>
+                <br />
+                <sub style="font-size:14px"><b>微信公众号</b></sub>
+            </a>
+        </td>
+    </tr>
+</table>
 
 ![Image](https://github.com/user-attachments/assets/a27ed620-30a3-460d-85b2-6fa869a91780)
 
@@ -159,11 +168,9 @@ server {
 
 开源不易，如果本项目有帮助到你的话，可以考虑请作者喝杯咖啡~你的赞助对项目的可持续发展非常重要，是作者持续维护的最大动力。
 
-> 推荐使用支付宝，微信获取不到头像。转账请备注【思维导图】。
->
-> 也可以通过购买付费插件来支持我们：[付费插件](https://wanglin2.github.io/mind-map-docs/plugins/about.html)。
->
-> 赞助等级：最强王者（￥500+）、星耀赞助（￥300+）、钻石赞助（￥150+）、黄金赞助（￥50+）、青铜赞助
+> 推荐使用支付宝，微信获取不到头像。转账请备注【思维导图赞助】。
+
+> 赞助等级：最强王者（￥500+）、星耀赞助（￥300+）、钻石赞助（￥200+）、黄金赞助（￥100+）、青铜赞助
 
 <p>
   <img src="./web/src/assets/img/alipay.jpg" style="width: 300px" />
@@ -379,6 +386,13 @@ server {
                 <img src="./web/src/assets/avatar/default.png" width="50;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px"/>
                 <br />
                 <sub style="font-size:14px"><b>LSHM</b></sub>
+            </a>
+        </td>
+        <td align="center" style="word-wrap: break-word; width: 75.0; height: 75.0">
+            <a href="#">
+                <img src="./web/src/assets/avatar/default.png" width="50;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px"/>
+                <br />
+                <sub style="font-size:14px"><b>newplayer</b></sub>
             </a>
         </td>
     </tr>
