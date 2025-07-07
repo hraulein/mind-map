@@ -29,7 +29,9 @@
 
 - 目前 `httpdGIN` 采用配置文件形式读取配置, 如需自定义配置, 请先将容器内部的 `/conf.d/` 目录拷贝出来后再挂载
 
-## 使用方式
+> 3.`obsidian`插件，首个版本现已发布：
+>
+> 下载地址：[https://github.com/wanglin2/obsidian-simplemindmap/releases](https://github.com/wanglin2/obsidian-simplemindmap/releases)
 
 1\. `docker-compose.yaml`
 
