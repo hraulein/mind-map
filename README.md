@@ -10,7 +10,21 @@
 
 ---
 
-中文 | [English](./README_en.md)
+# 客户端和插件
+
+- 思绪思维导图客户端
+
+支持Windows、Mac及Linux系统。下载地址：[Github](https://github.com/wanglin2/mind-map/releases)、[百度网盘](https://pan.baidu.com/s/1C8phEJ5pagAAa-o1tU42Uw?pwd=jqfb)、[夸克网盘](https://pan.quark.cn/s/2733982f1976)
+
+- Obsidian插件
+
+下载地址：[Github](https://github.com/wanglin2/obsidian-simplemindmap/releases)
+
+- UTools插件
+
+已上架[uTools](https://www.u.tools/)插件应用市场，可直接在`uTools`插件应用市场中搜索`思绪`进行安装，也可以直接访问该地址：[主页](https://www.u-tools.cn/plugins/detail/%E6%80%9D%E7%BB%AA%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/)，点击右侧的【启动】按钮进行安装
+
+# 库
 
 ---
 
@@ -22,16 +36,7 @@
 在线地址: https://mind-map.hraulein.com  
 镜像地址: https://hub.docker.com/r/hraulein/mind-map
 
-如在部署过程中遇到镜像启动失败等相关问题, 请提 [issue](https://github.com/hraulein/mind-map/issues)
-
-- 目前容器的运行环境为 `scratch`(不包含 `sh/bash`), 不影响 mind-map 的运行  
-如需挂载你自定义的 `mind-map` 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
-
-- 目前 `httpdGIN` 采用配置文件形式读取配置, 如需自定义配置, 请先将容器内部的 `/conf.d/` 目录拷贝出来后再挂载
-
-## 使用方式
-
-1\. `docker-compose.yaml`
+- 云存储版本，如果你需要带后端的云存储版本，可以尝试我们开发的另一个项目[理想文档](https://github.com/wanglin2/lx-doc)。
 
 ```
 services:
