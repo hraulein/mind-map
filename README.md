@@ -16,8 +16,12 @@
 
 基于 `Gin` 框架构建跨平台 `HTTP` 服务，通过 `Docker` 的多平台构建能力，实现 `mind-map` 在不同硬件架构上运行使用。
 
-* 跨平台兼容：支持 `amd64` `arm64 | arm/v8` `arm/v7`
-* 开箱即用：预配置 `mind-map` 静态文件，无需额外运行时依赖
+> 如果在macOS上安装后无法打开，报错**不受信任**或者**移到垃圾箱**，执行下面命令后再启动即可：
+> ``` shell
+> sudo xattr -d com.apple.quarantine /Applications/思绪思维导图.app
+> ```
+
+- Obsidian插件
 
 在线地址: https://mind-map.hraulein.com  
 镜像地址: https://hub.docker.com/r/hraulein/mind-map
