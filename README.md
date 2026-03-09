@@ -8,29 +8,9 @@
 [![npm-version](https://img.shields.io/npm/v/simple-mind-map)](https://www.npmjs.com/package/simple-mind-map)
 ![license](https://img.shields.io/npm/l/express.svg)
 
-[English](./README_EN.md) | 中文
+---
 
-> 中文名：思绪思维导图。一个简单&强大的 Web 思维导图库和思维导图软件。
-
-本项目包含两部分：开源的JavaScript库和闭源的客户端软件。
-
-# 库、Web
-
-> 即本仓库中的代码，目前已进入低维护状态。
-
-- 一个 `js` 思维导图库，不依赖任何框架，可以用来快速完成 Web 思维导图产品的开发。
-
->  开发文档：[https://wanglin2.github.io/mind-map-docs/](https://wanglin2.github.io/mind-map-docs/)
-
-- 一个 Web 思维导图，基于思维导图库、`Vue2.x`、`ElementUI` 开发，支持操作电脑本地文件，可以当做一个在线版思维导图应用使用，也可以自部署和二次开发。
-
-> 在线地址：[https://wanglin2.github.io/mind-map/](https://wanglin2.github.io/mind-map/)
-
-了解更多信息：[README](./README_MORE_ZH.md)。
-
-# 客户端、插件
-
-> 客户端和插件代码不开源，正在积极开发维护中。
+中文 | [English](./README_en.md)
 
 ---
 
@@ -39,39 +19,103 @@
 * 跨平台兼容：支持 `amd64` `arm64 | arm/v8` `arm/v7`
 * 开箱即用：预配置 `mind-map` 静态文件，无需额外运行时依赖
 
-支持Windows、Mac及Linux系统；支持中文、英文、中文繁体、越南语、俄语语言。
+在线地址: https://mind-map.hraulein.com  
+镜像地址: https://hub.docker.com/r/hraulein/mind-map
 
 如在部署过程中遇到镜像启动失败等相关问题, 请提 [issue](https://github.com/hraulein/mind-map/issues)
 
 - 目前容器的运行环境为 `scratch`(不包含 `sh/bash`), 不影响 mind-map 的运行  
 如需挂载你自定义的 `mind-map` 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
 
-![](./assets/client/client1.png)
+- 目前 `httpdGIN` 采用配置文件形式读取配置, 如需自定义配置, 请先将容器内部的 `/conf.d/` 目录拷贝出来后再挂载
 
-![](./assets/client/client2.png)
+## 使用方式
 
-![](./assets/client/client3.png)
+1\. `docker-compose.yaml`
 
-![](./assets/client/client4.png)
+```
+services:
+  mind-map:
+    image: hraulein/mind-map:latest
+    container_name: mind-map
+    restart: always
+    ports:
+      - "8080:8080"  
+    volumes:                   
+      - ./your_config_dir:/conf.d
+  #   - ./your_dist_dir:/app                               # 如果你想自定义 mind-map 的静态文件
 
-![](./assets/client/client5.png)
 
-![](./assets/client/client6.png)
+```
 
-- Obsidian插件
+2\. `docker cli`
 
-下载地址：[Github](https://github.com/wanglin2/obsidian-simplemindmap/releases)
+```
+docker run -d --name mind-map -p 8080:8080 -v ./your_config_dir:/conf.d hraulein/mind-map:latest
+```
 
-![](./assets/ob/ob1.png)
+## nginx 配置参考
 
-![](./assets/ob/ob2.png)
+- `HTTP` 重定向 `HTTPS` 
 
-![](./assets/ob/ob3.png)
+```
+# /etc/nginx/conf.d/00-redirect.conf
 
-![](./assets/ob/ob4.png)
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    return 301 https://$host$request_uri;
+}
+```
 
-![](./assets/ob/ob5.png)
+- `SSL` 证书相关配置  
 
-- UTools插件
+``` 
+# /etc/nginx/conf.d/include/ssl_parameter
 
-已上架[uTools](https://www.u.tools/)插件应用市场，可直接在`uTools`插件应用市场中搜索`思绪`进行安装，也可以直接访问该地址：[主页](https://www.u-tools.cn/plugins/detail/%E6%80%9D%E7%BB%AA%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/)，点击右侧的【启动】按钮进行安装。
+ssl_certificate '/etc/nginx/*****/*****/fullchain.cer';    # <<< 替换为实际的证书地址
+ssl_certificate_key '/etc/nginx/*****/*****/*****.key';    # <<< 替换为实际的证书地址
+ssl_trusted_certificate '/etc/nginx/*****/*****/ca.cer';   # <<< 替换为实际的证书地址
+ssl_session_cache shared:SSL:1m;
+ssl_session_timeout 10m;
+ssl_session_tickets off;
+ssl_prefer_server_ciphers on;
+ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_stapling on;
+ssl_stapling_verify on;
+resolver 8.8.8.8 1.1.1.1 valid=300s;
+resolver_timeout 5s;
+add_header Strict-Transport-Security "max-age=31536000" always;
+```
+
+- `nginx` 反向代理配置
+
+``` 
+# /etc/nginx/conf.d/mind-map.conf
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    include ./conf.d/include/ssl_parameter;  
+  
+    server_name mind-map.hraulein.localhost;               # <<< 替换为你的域名
+    set $IPADDR 172.16.19.156;                             # <<< 替换为你服务器的内网 IP 地址
+
+    location / {
+        proxy_pass http://$IPADDR:8080;                    # <<< 替换为 mind-map 服务实际映射端口
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+        proxy_set_header Accept-Encoding gzip;
+    }    
+    # include ./conf.d/include/err_pages;
+}
+```
+
+## 支持一下
+
+如果 Docker 镜像对你有帮助 , 不妨请我喝杯阔落解解馋~
+
+![Image](https://github.com/user-attachments/assets/a27ed620-30a3-460d-85b2-6fa869a91780)
