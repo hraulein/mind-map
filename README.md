@@ -54,7 +54,7 @@ services:
 docker run -d --name mind-map -p 8080:8080 -v ./your_config_dir:/conf.d hraulein/mind-map:latest
 ```
 
-下载地址：[Github](https://github.com/wanglin2/mind-map/releases)、[百度网盘](https://pan.baidu.com/s/1C8phEJ5pagAAa-o1tU42Uw?pwd=jqfb)、[夸克网盘](https://pan.quark.cn/s/2733982f1976)、[微软应用商店](https://apps.microsoft.com/detail/9p58vg94khcq?hl=zh-CN&gl=CN)
+## nginx 配置参考
 
 - `HTTP` 重定向 `HTTPS` 
 
