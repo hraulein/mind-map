@@ -50,7 +50,9 @@ services:
 
 2\. `docker cli`
 
-支持Windows、Mac及Linux系统；支持中文简体、繁體中文、English、Tiếng Việt、Русский、日本語、한국어、Deutsch、Français、Português语言。
+```
+docker run -d --name mind-map -p 8080:8080 -v ./your_config_dir:/conf.d hraulein/mind-map:latest
+```
 
 ## nginx 配置参考
 
