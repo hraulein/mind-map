@@ -45,7 +45,6 @@ services:
       - ./your_config_dir:/conf.d
   #   - ./your_dist_dir:/app                               # 如果你想自定义 mind-map 的静态文件
 
-## 思绪思维导图客户端
 
 ```
 
@@ -92,7 +91,8 @@ add_header Strict-Transport-Security "max-age=31536000" always;
 
 - `nginx` 反向代理配置
 
-## Obsidian插件
+``` 
+# /etc/nginx/conf.d/mind-map.conf
 
 server {
     listen 443 ssl;
@@ -118,10 +118,4 @@ server {
 
 如果 Docker 镜像对你有帮助 , 不妨请我喝杯阔落解解馋~
 
-![](./assets/ob/ob4.png)
-
-![](./assets/ob/ob5.png)
-
-## UTools插件
-
-已上架[uTools](https://www.u.tools/)插件应用市场，可直接在`uTools`插件应用市场中搜索`思绪`进行安装，也可以直接访问该地址：[主页](https://www.u-tools.cn/plugins/detail/%E6%80%9D%E7%BB%AA%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/)，点击右侧的【启动】按钮进行安装。
+![Image](https://github.com/user-attachments/assets/a27ed620-30a3-460d-85b2-6fa869a91780)
