@@ -45,9 +45,6 @@ services:
       - ./your_config_dir:/conf.d
   #   - ./your_dist_dir:/app                               # 如果你想自定义 mind-map 的静态文件
 
-产品官网：[http://www.sxmind.cn/](http://www.sxmind.cn/)
-
-## 思绪思维导图客户端
 
 ```
 
