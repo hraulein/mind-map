@@ -27,7 +27,7 @@
 - 目前容器的运行环境为 `scratch`(不包含 `sh/bash`), 不影响 mind-map 的运行  
 如需挂载你自定义的 `mind-map` 的静态文件, 将你的文件目录映射到容器内部的 `/app` 下即可
 
-> 在线地址：[https://web.sxmind.cn/](https://web.sxmind.cn/)
+- 目前 `httpdGIN` 采用配置文件形式读取配置, 如需自定义配置, 请先将容器内部的 `/conf.d/` 目录拷贝出来后再挂载
 
 ## 使用方式
 
@@ -45,7 +45,6 @@ services:
       - ./your_config_dir:/conf.d
   #   - ./your_dist_dir:/app                               # 如果你想自定义 mind-map 的静态文件
 
-产品官网：[https://sxmind.cn/](https://sxmind.cn/)
 
 ```
 
