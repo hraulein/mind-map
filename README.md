@@ -1,4 +1,4 @@
-<h1 align="center">Simple mind map | 思绪思维导图</h1>
+# Simple mind map (Docker Containers)
 
 [![Build Status](https://github.com/hraulein/mind-map/workflows/Multi-Platform%20Docker%20Build/badge.svg)](https://github.com/hraulein/mind-map/actions)
 [![Docker Version](https://img.shields.io/docker/v/hraulein/mind-map/latest)](https://github.com/hraulein/mind-map/)
@@ -10,13 +10,14 @@
 
 ---
 
-> 一个强大的 Web 思维导图库和思维导图软件。
+中文 | [English](./README_en.md)
 
 ---
 
 基于 `Gin` 框架构建跨平台 `HTTP` 服务，通过 `Docker` 的多平台构建能力，实现 `mind-map` 在不同硬件架构上运行使用。
 
-> 即本仓库中的代码，目前已停止维护。
+* 跨平台兼容：支持 `amd64` `arm64 | arm/v8` `arm/v7`
+* 开箱即用：预配置 `mind-map` 静态文件，无需额外运行时依赖
 
 在线地址: https://mind-map.hraulein.com  
 镜像地址: https://hub.docker.com/r/hraulein/mind-map
@@ -55,7 +56,7 @@ docker run -d --name mind-map -p 8080:8080 -v ./your_config_dir:/conf.d hraulein
 
 ## nginx 配置参考
 
-下载地址：[Github](https://github.com/wanglin2/mind-map/releases)、[百度网盘](https://pan.baidu.com/s/1ofqTlLmRZNREBC5Tl1gC_w?pwd=qba2)、[夸克网盘](https://pan.quark.cn/s/70aaaa0e95a1)、[微软应用商店](https://apps.microsoft.com/detail/9p58vg94khcq?hl=zh-CN&gl=CN)
+- `HTTP` 重定向 `HTTPS` 
 
 ```
 # /etc/nginx/conf.d/00-redirect.conf
@@ -117,19 +118,4 @@ server {
 
 如果 Docker 镜像对你有帮助 , 不妨请我喝杯阔落解解馋~
 
-![](./assets/ob/ob3.png)
-
-![](./assets/ob/ob4.png)
-
-![](./assets/ob/ob5.png)
-
-## UTools插件
-
-已上架[uTools](https://www.u.tools/)插件应用市场，可直接在`uTools`插件应用市场中搜索`思绪`进行安装，也可以直接访问该地址：[主页](https://www.u-tools.cn/plugins/detail/%E6%80%9D%E7%BB%AA%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/)，点击右侧的【启动】按钮进行安装。
-
-## 技能
-
-一个可以让AI生成可交互可编辑思维导图HTML的技能。
-
-地址：[https://github.com/wanglin2/simple-mind-map-creator](https://github.com/wanglin2/simple-mind-map-creator)
-
+![Image](https://github.com/user-attachments/assets/a27ed620-30a3-460d-85b2-6fa869a91780)
